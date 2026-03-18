@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "Mayan",
+	"FriendlyName": "ShieldUE",
+	"Description": "Runtime variable protection plugin for Unreal Engine",
+	"Category": "Security",
+	"CreatedBy": "Sheikh Sohel Moon",
+	"CreatedByURL": "iamsohel.xyz",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"EngineVersion": "5.7.0",
+	"CanContainContent": false,
+	"IsBetaVersion": true,
+	"Installed": true,
+	"Modules": [
+		{
+			"Name": "ShieldUE",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
