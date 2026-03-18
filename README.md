@@ -33,10 +33,10 @@ ShieldUE includes Blueprint nodes for:
 4. Rebuild the project.
 
 ## Website
-[ShieldUE Project Page](https://iamsohel.xyz/shieldue)
+[ShieldUE Project Page](https://shieldue.iamsohel.xyz/)
 
 ## Demo Video
-[YouTube Demo Link](YOUR_LINK_HERE)
+[YouTube Demo Link](https://youtu.be/pkV4bPpjEOI)
 
 ## Author
-Sheikh Sohel Moon
+[Sheikh Sohel Moon](https://iamsohel.xyz)
