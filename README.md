@@ -38,5 +38,5 @@ ShieldUE includes Blueprint nodes for:
 ## What Is This
 [See what it actually does](https://youtu.be/pkV4bPpjEOI)
 
-## Author
+## Developer
 [Sheikh Sohel Moon](https://iamsohel.xyz)
