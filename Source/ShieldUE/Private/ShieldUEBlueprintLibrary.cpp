@@ -48,6 +48,28 @@ ESecureValueTamperReason UShieldUEBlueprintLibrary::SecureFloat_GetLastTamperRea
 	return Value.GetLastTamperReason();
 }
 
+bool UShieldUEBlueprintLibrary::SecureFloat_IsInitialized(const FSecureFloat& Value)
+{
+	return Value.IsInitialized();
+}
+
+float UShieldUEBlueprintLibrary::SecureFloat_GetLastValidValue(const FSecureFloat& Value)
+{
+	return Value.GetLastValidValue();
+}
+
+void UShieldUEBlueprintLibrary::SecureFloat_CorruptForTesting(FSecureFloat& Value)
+{
+	Value.CorruptForTesting();
+}
+
+bool UShieldUEBlueprintLibrary::SecureFloat_ValidateRules(const FSecureFloatRules& Rules, FString& OutError)
+{
+	FSecureFloat Value;
+	Value.SetRules(Rules);
+	return Value.ValidateRules(OutError);
+}
+
 void UShieldUEBlueprintLibrary::SecureFloat_InitializeFromInternalRules(FSecureFloat& Value, float InitialValue)
 {
 	Value.Initialize(InitialValue, Value.GetRules());
@@ -101,6 +123,28 @@ ESecureValueTamperReason UShieldUEBlueprintLibrary::SecureInt_GetLastTamperReaso
 	return Value.GetLastTamperReason();
 }
 
+bool UShieldUEBlueprintLibrary::SecureInt_IsInitialized(const FSecureInt32& Value)
+{
+	return Value.IsInitialized();
+}
+
+int32 UShieldUEBlueprintLibrary::SecureInt_GetLastValidValue(const FSecureInt32& Value)
+{
+	return Value.GetLastValidValue();
+}
+
+void UShieldUEBlueprintLibrary::SecureInt_CorruptForTesting(FSecureInt32& Value)
+{
+	Value.CorruptForTesting();
+}
+
+bool UShieldUEBlueprintLibrary::SecureInt_ValidateRules(const FSecureInt32Rules& Rules, FString& OutError)
+{
+	FSecureInt32 Value;
+	Value.SetRules(Rules);
+	return Value.ValidateRules(OutError);
+}
+
 void UShieldUEBlueprintLibrary::SecureInt_InitializeFromInternalRules(FSecureInt32& Value, int32 InitialValue)
 {
 	Value.Initialize(InitialValue, Value.GetRules());
@@ -152,6 +196,28 @@ int32 UShieldUEBlueprintLibrary::SecureBool_GetTamperCount(const FSecureBool& Va
 ESecureValueTamperReason UShieldUEBlueprintLibrary::SecureBool_GetLastTamperReason(const FSecureBool& Value)
 {
 	return Value.GetLastTamperReason();
+}
+
+bool UShieldUEBlueprintLibrary::SecureBool_IsInitialized(const FSecureBool& Value)
+{
+	return Value.IsInitialized();
+}
+
+bool UShieldUEBlueprintLibrary::SecureBool_GetLastValidValue(const FSecureBool& Value)
+{
+	return Value.GetLastValidValue();
+}
+
+void UShieldUEBlueprintLibrary::SecureBool_CorruptForTesting(FSecureBool& Value)
+{
+	Value.CorruptForTesting();
+}
+
+bool UShieldUEBlueprintLibrary::SecureBool_ValidateRules(const FSecureBoolRules& Rules, FString& OutError)
+{
+	FSecureBool Value;
+	Value.SetRules(Rules);
+	return Value.ValidateRules(OutError);
 }
 
 void UShieldUEBlueprintLibrary::SecureBool_InitializeFromInternalRules(FSecureBool& Value, bool InitialValue)

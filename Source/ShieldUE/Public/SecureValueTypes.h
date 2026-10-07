@@ -148,8 +148,9 @@ public:
 	uint32 GetTamperCount() const { return TamperCount; }
 	float GetLastValidValue() const { return LastValidValue; }
 	ESecureValueTamperReason GetLastTamperReason() const { return LastTamperReason; }
+	bool ValidateRules(FString& OutError) const;
 
-	void SetRules(const FSecureFloatRules& InRules) { Rules = InRules; }
+	void SetRules(const FSecureFloatRules& InRules);
 	const FSecureFloatRules& GetRules() const { return Rules; }
 
 private:
@@ -220,8 +221,9 @@ public:
 	uint32 GetTamperCount() const { return TamperCount; }
 	int32 GetLastValidValue() const { return LastValidValue; }
 	ESecureValueTamperReason GetLastTamperReason() const { return LastTamperReason; }
+	bool ValidateRules(FString& OutError) const;
 
-	void SetRules(const FSecureInt32Rules& InRules) { Rules = InRules; }
+	void SetRules(const FSecureInt32Rules& InRules);
 	const FSecureInt32Rules& GetRules() const { return Rules; }
 
 private:
@@ -289,8 +291,9 @@ public:
 	uint32 GetTamperCount() const { return TamperCount; }
 	bool GetLastValidValue() const { return LastValidValue; }
 	ESecureValueTamperReason GetLastTamperReason() const { return LastTamperReason; }
+	bool ValidateRules(FString& OutError) const;
 
-	void SetRules(const FSecureBoolRules& InRules) { Rules = InRules; }
+	void SetRules(const FSecureBoolRules& InRules);
 	const FSecureBoolRules& GetRules() const { return Rules; }
 
 private:

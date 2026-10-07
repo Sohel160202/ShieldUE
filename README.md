@@ -15,6 +15,7 @@ ShieldUE supports both C++ and Blueprint workflows.
 - Range limits for Float and Int32 values
 - Manual runtime re-keying
 - Optional automatic re-keying through `UpdateProtection`
+- Rule validation with actionable warnings
 - Blueprint and C++ APIs
 
 ## Important security scope
@@ -69,7 +70,8 @@ For a protected value:
 3. Use the ShieldUE `Get` and `Set` nodes instead of reading or writing the value directly.
 4. Call `Update Protection` from Tick when automatic re-keying is enabled.
 5. Use `Validate`, `Get Tamper Count`, and `Get Last Tamper Reason` for diagnostics or response logic.
-6. Use `Reset To Default` when your game intentionally wants to restore the configured fallback value.
+6. Use `Is Initialized`, `Get Last Valid Value`, and `Reset To Default` when your game needs recovery or diagnostics.
+7. Use the testing nodes only in development and automated tests.
 
 ## Recovery modes
 
@@ -88,6 +90,14 @@ Automatic re-keying is opt-in. Configure `bEnableAutoRekey` and `RekeyIntervalSe
 The C++ structs include `CorruptForTesting()` for controlled development tests. A test can corrupt a value, call `Validate()` or `Get()`, and confirm that the configured detection and recovery behavior occurs.
 
 Do not use testing corruption functions in shipping gameplay code.
+
+## Documentation
+
+- [Architecture](Docs/Architecture.md)
+- [Rule validation](Docs/Rule-Validation.md)
+- [Serialization and multiplayer](Docs/Serialization-and-Multiplayer.md)
+- [Security policy](SECURITY.md)
+- [Contributing](CONTRIBUTING.md)
 
 ## Roadmap
 

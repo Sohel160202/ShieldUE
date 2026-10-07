@@ -2,6 +2,8 @@
 
 #include "ShieldUE.h"
 
+DEFINE_LOG_CATEGORY(LogShieldUE);
+
 #define LOCTEXT_NAMESPACE "FShieldUEModule"
 
 void FShieldUEModule::StartupModule()

@@ -4,6 +4,8 @@
 
 #include "Modules/ModuleManager.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(LogShieldUE, Log, All);
+
 class FShieldUEModule : public IModuleInterface
 {
 public:

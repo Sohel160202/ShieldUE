@@ -40,6 +40,18 @@ public:
 	UFUNCTION(BlueprintPure, Category = "ShieldUE|Float", meta = (ToolTip = "Return the reason for the most recent detected tampering event."))
 	static ESecureValueTamperReason SecureFloat_GetLastTamperReason(const FSecureFloat& Value);
 
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Float", meta = (ToolTip = "Return whether the Secure Float has been initialized."))
+	static bool SecureFloat_IsInitialized(const FSecureFloat& Value);
+
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Float", meta = (ToolTip = "Return the last valid value recorded by the Secure Float."))
+	static float SecureFloat_GetLastValidValue(const FSecureFloat& Value);
+
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Float|Testing", meta = (ToolTip = "Intentionally corrupt a Secure Float for development testing. Do not use in shipping gameplay."))
+	static void SecureFloat_CorruptForTesting(UPARAM(ref) FSecureFloat& Value);
+
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Float", meta = (ToolTip = "Validate Secure Float rules and return a human-readable error when invalid."))
+	static bool SecureFloat_ValidateRules(const FSecureFloatRules& Rules, FString& OutError);
+
 	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Float", meta = (ToolTip = "Initialize a Secure Float using the rules already stored inside the variable."))
 	static void SecureFloat_InitializeFromInternalRules(UPARAM(ref) FSecureFloat& Value, float InitialValue);
 
@@ -73,6 +85,18 @@ public:
 	UFUNCTION(BlueprintPure, Category = "ShieldUE|Int", meta = (ToolTip = "Return the reason for the most recent detected tampering event."))
 	static ESecureValueTamperReason SecureInt_GetLastTamperReason(const FSecureInt32& Value);
 
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Int", meta = (ToolTip = "Return whether the Secure Integer has been initialized."))
+	static bool SecureInt_IsInitialized(const FSecureInt32& Value);
+
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Int", meta = (ToolTip = "Return the last valid value recorded by the Secure Integer."))
+	static int32 SecureInt_GetLastValidValue(const FSecureInt32& Value);
+
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Int|Testing", meta = (ToolTip = "Intentionally corrupt a Secure Integer for development testing. Do not use in shipping gameplay."))
+	static void SecureInt_CorruptForTesting(UPARAM(ref) FSecureInt32& Value);
+
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Int", meta = (ToolTip = "Validate Secure Integer rules and return a human-readable error when invalid."))
+	static bool SecureInt_ValidateRules(const FSecureInt32Rules& Rules, FString& OutError);
+
 	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Int", meta = (ToolTip = "Initialize a Secure Int using the rules already stored inside the variable."))
 	static void SecureInt_InitializeFromInternalRules(UPARAM(ref) FSecureInt32& Value, int32 InitialValue);
 
@@ -105,6 +129,18 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "ShieldUE|Bool", meta = (ToolTip = "Return the reason for the most recent detected tampering event."))
 	static ESecureValueTamperReason SecureBool_GetLastTamperReason(const FSecureBool& Value);
+
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Bool", meta = (ToolTip = "Return whether the Secure Bool has been initialized."))
+	static bool SecureBool_IsInitialized(const FSecureBool& Value);
+
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Bool", meta = (ToolTip = "Return the last valid value recorded by the Secure Bool."))
+	static bool SecureBool_GetLastValidValue(const FSecureBool& Value);
+
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Bool|Testing", meta = (ToolTip = "Intentionally corrupt a Secure Bool for development testing. Do not use in shipping gameplay."))
+	static void SecureBool_CorruptForTesting(UPARAM(ref) FSecureBool& Value);
+
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Bool", meta = (ToolTip = "Validate Secure Bool rules and return a human-readable error when invalid."))
+	static bool SecureBool_ValidateRules(const FSecureBoolRules& Rules, FString& OutError);
 
 	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Bool", meta = (ToolTip = "Initialize a Secure Bool using the rules already stored inside the variable."))
 	static void SecureBool_InitializeFromInternalRules(UPARAM(ref) FSecureBool& Value, bool InitialValue);

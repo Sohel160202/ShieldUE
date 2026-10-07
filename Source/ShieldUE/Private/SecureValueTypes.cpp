@@ -1,4 +1,5 @@
 #include "SecureValueTypes.h"
+#include "ShieldUE.h"
 #include "HAL/PlatformTime.h"
 #include "Misc/DateTime.h"
 
@@ -47,9 +48,61 @@ FSecureFloat::FSecureFloat()
 	LastTamperReason = ESecureValueTamperReason::None;
 }
 
+bool FSecureFloat::ValidateRules(FString& OutError) const
+{
+	OutError.Reset();
+
+	if (!FMath::IsFinite(Rules.MinValue) || !FMath::IsFinite(Rules.MaxValue) || !FMath::IsFinite(Rules.DefaultValue))
+	{
+		OutError = TEXT("Float rules cannot contain NaN or infinite values.");
+		return false;
+	}
+
+	if (Rules.bUseRange && Rules.MinValue > Rules.MaxValue)
+	{
+		OutError = TEXT("MinValue cannot be greater than MaxValue.");
+		return false;
+	}
+
+	if (Rules.bUseRange && (Rules.DefaultValue < Rules.MinValue || Rules.DefaultValue > Rules.MaxValue))
+	{
+		OutError = TEXT("DefaultValue must be inside the configured range.");
+		return false;
+	}
+
+	if (Rules.bEnableAutoRekey && Rules.RekeyIntervalSeconds <= 0.0f)
+	{
+		OutError = TEXT("RekeyIntervalSeconds must be greater than zero when automatic re-keying is enabled.");
+		return false;
+	}
+
+	if (static_cast<uint8>(Rules.RecoveryMode) > static_cast<uint8>(ESecureValueRecoveryMode::ResetToDefault))
+	{
+		OutError = TEXT("RecoveryMode is invalid.");
+		return false;
+	}
+
+	return true;
+}
+
+void FSecureFloat::SetRules(const FSecureFloatRules& InRules)
+{
+	Rules = InRules;
+	FString RuleError;
+	if (!ValidateRules(RuleError))
+	{
+		UE_LOG(LogShieldUE, Warning, TEXT("Invalid Secure Float rules: %s"), *RuleError);
+	}
+}
+
 void FSecureFloat::Initialize(float InitialValue, const FSecureFloatRules& InRules)
 {
 	Rules = InRules;
+	FString RuleError;
+	if (!ValidateRules(RuleError))
+	{
+		UE_LOG(LogShieldUE, Warning, TEXT("Invalid Secure Float rules: %s"), *RuleError);
+	}
 	Key = GenerateRuntimeKey();
 	EncodingPattern = static_cast<uint8>(FMath::RandRange(0, 2));
 	bInitialized = true;
@@ -331,9 +384,55 @@ FSecureInt32::FSecureInt32()
 	LastTamperReason = ESecureValueTamperReason::None;
 }
 
+bool FSecureInt32::ValidateRules(FString& OutError) const
+{
+	OutError.Reset();
+
+	if (Rules.bUseRange && Rules.MinValue > Rules.MaxValue)
+	{
+		OutError = TEXT("MinValue cannot be greater than MaxValue.");
+		return false;
+	}
+
+	if (Rules.bUseRange && (Rules.DefaultValue < Rules.MinValue || Rules.DefaultValue > Rules.MaxValue))
+	{
+		OutError = TEXT("DefaultValue must be inside the configured range.");
+		return false;
+	}
+
+	if (Rules.bEnableAutoRekey && Rules.RekeyIntervalSeconds <= 0.0f)
+	{
+		OutError = TEXT("RekeyIntervalSeconds must be greater than zero when automatic re-keying is enabled.");
+		return false;
+	}
+
+	if (static_cast<uint8>(Rules.RecoveryMode) > static_cast<uint8>(ESecureValueRecoveryMode::ResetToDefault))
+	{
+		OutError = TEXT("RecoveryMode is invalid.");
+		return false;
+	}
+
+	return true;
+}
+
+void FSecureInt32::SetRules(const FSecureInt32Rules& InRules)
+{
+	Rules = InRules;
+	FString RuleError;
+	if (!ValidateRules(RuleError))
+	{
+		UE_LOG(LogShieldUE, Warning, TEXT("Invalid Secure Int rules: %s"), *RuleError);
+	}
+}
+
 void FSecureInt32::Initialize(int32 InitialValue, const FSecureInt32Rules& InRules)
 {
 	Rules = InRules;
+	FString RuleError;
+	if (!ValidateRules(RuleError))
+	{
+		UE_LOG(LogShieldUE, Warning, TEXT("Invalid Secure Int rules: %s"), *RuleError);
+	}
 	Key = GenerateRuntimeKey();
 	EncodingPattern = static_cast<uint8>(FMath::RandRange(0, 3));
 	bInitialized = true;
@@ -630,9 +729,43 @@ FSecureBool::FSecureBool()
 	LastTamperReason = ESecureValueTamperReason::None;
 }
 
+bool FSecureBool::ValidateRules(FString& OutError) const
+{
+	OutError.Reset();
+
+	if (Rules.bEnableAutoRekey && Rules.RekeyIntervalSeconds <= 0.0f)
+	{
+		OutError = TEXT("RekeyIntervalSeconds must be greater than zero when automatic re-keying is enabled.");
+		return false;
+	}
+
+	if (static_cast<uint8>(Rules.RecoveryMode) > static_cast<uint8>(ESecureValueRecoveryMode::ResetToDefault))
+	{
+		OutError = TEXT("RecoveryMode is invalid.");
+		return false;
+	}
+
+	return true;
+}
+
+void FSecureBool::SetRules(const FSecureBoolRules& InRules)
+{
+	Rules = InRules;
+	FString RuleError;
+	if (!ValidateRules(RuleError))
+	{
+		UE_LOG(LogShieldUE, Warning, TEXT("Invalid Secure Bool rules: %s"), *RuleError);
+	}
+}
+
 void FSecureBool::Initialize(bool InitialValue, const FSecureBoolRules& InRules)
 {
 	Rules = InRules;
+	FString RuleError;
+	if (!ValidateRules(RuleError))
+	{
+		UE_LOG(LogShieldUE, Warning, TEXT("Invalid Secure Bool rules: %s"), *RuleError);
+	}
 	Key = GenerateRuntimeKey();
 	bInitialized = true;
 	TimeSinceLastRekey = 0.0f;
