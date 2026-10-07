@@ -6,6 +6,8 @@ All notable ShieldUE changes are documented here.
 
 ### Added
 
+- `FSecureInt64`, `FSecureDouble`, and `FSecureByte` value types.
+- C++ and Blueprint APIs for the new numeric types.
 - Blueprint accessors for initialization state and last valid values.
 - Blueprint testing nodes for controlled corruption tests.
 - Blueprint rule-validation nodes with human-readable errors.

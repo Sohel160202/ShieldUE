@@ -224,3 +224,69 @@ void UShieldUEBlueprintLibrary::SecureBool_InitializeFromInternalRules(FSecureBo
 {
 	Value.Initialize(InitialValue, Value.GetRules());
 }
+
+/* INT64 */
+
+void UShieldUEBlueprintLibrary::SecureInt64_Initialize(FSecureInt64& Value, int64 InitialValue, const FSecureInt64Rules& Rules) { Value.Initialize(InitialValue, Rules); }
+void UShieldUEBlueprintLibrary::SecureInt64_Set(FSecureInt64& Value, int64 NewValue) { Value.Set(NewValue); }
+int64 UShieldUEBlueprintLibrary::SecureInt64_Get(FSecureInt64& Value) { return Value.Get(); }
+bool UShieldUEBlueprintLibrary::SecureInt64_Validate(FSecureInt64& Value) { return Value.Validate(); }
+void UShieldUEBlueprintLibrary::SecureInt64_Rekey(FSecureInt64& Value) { Value.Rekey(); }
+void UShieldUEBlueprintLibrary::SecureInt64_UpdateProtection(FSecureInt64& Value, float DeltaSeconds) { Value.UpdateProtection(DeltaSeconds); }
+void UShieldUEBlueprintLibrary::SecureInt64_ResetToDefault(FSecureInt64& Value) { Value.ResetToDefault(); }
+int32 UShieldUEBlueprintLibrary::SecureInt64_GetTamperCount(const FSecureInt64& Value) { return static_cast<int32>(Value.GetTamperCount()); }
+ESecureValueTamperReason UShieldUEBlueprintLibrary::SecureInt64_GetLastTamperReason(const FSecureInt64& Value) { return Value.GetLastTamperReason(); }
+bool UShieldUEBlueprintLibrary::SecureInt64_IsInitialized(const FSecureInt64& Value) { return Value.IsInitialized(); }
+int64 UShieldUEBlueprintLibrary::SecureInt64_GetLastValidValue(const FSecureInt64& Value) { return Value.GetLastValidValue(); }
+void UShieldUEBlueprintLibrary::SecureInt64_CorruptForTesting(FSecureInt64& Value) { Value.CorruptForTesting(); }
+bool UShieldUEBlueprintLibrary::SecureInt64_ValidateRules(const FSecureInt64Rules& Rules, FString& OutError)
+{
+	FSecureInt64 Value;
+	Value.SetRules(Rules);
+	return Value.ValidateRules(OutError);
+}
+void UShieldUEBlueprintLibrary::SecureInt64_InitializeFromInternalRules(FSecureInt64& Value, int64 InitialValue) { Value.Initialize(InitialValue, Value.GetRules()); }
+
+/* DOUBLE */
+
+void UShieldUEBlueprintLibrary::SecureDouble_Initialize(FSecureDouble& Value, double InitialValue, const FSecureDoubleRules& Rules) { Value.Initialize(InitialValue, Rules); }
+void UShieldUEBlueprintLibrary::SecureDouble_Set(FSecureDouble& Value, double NewValue) { Value.Set(NewValue); }
+double UShieldUEBlueprintLibrary::SecureDouble_Get(FSecureDouble& Value) { return Value.Get(); }
+bool UShieldUEBlueprintLibrary::SecureDouble_Validate(FSecureDouble& Value) { return Value.Validate(); }
+void UShieldUEBlueprintLibrary::SecureDouble_Rekey(FSecureDouble& Value) { Value.Rekey(); }
+void UShieldUEBlueprintLibrary::SecureDouble_UpdateProtection(FSecureDouble& Value, float DeltaSeconds) { Value.UpdateProtection(DeltaSeconds); }
+void UShieldUEBlueprintLibrary::SecureDouble_ResetToDefault(FSecureDouble& Value) { Value.ResetToDefault(); }
+int32 UShieldUEBlueprintLibrary::SecureDouble_GetTamperCount(const FSecureDouble& Value) { return static_cast<int32>(Value.GetTamperCount()); }
+ESecureValueTamperReason UShieldUEBlueprintLibrary::SecureDouble_GetLastTamperReason(const FSecureDouble& Value) { return Value.GetLastTamperReason(); }
+bool UShieldUEBlueprintLibrary::SecureDouble_IsInitialized(const FSecureDouble& Value) { return Value.IsInitialized(); }
+double UShieldUEBlueprintLibrary::SecureDouble_GetLastValidValue(const FSecureDouble& Value) { return Value.GetLastValidValue(); }
+void UShieldUEBlueprintLibrary::SecureDouble_CorruptForTesting(FSecureDouble& Value) { Value.CorruptForTesting(); }
+bool UShieldUEBlueprintLibrary::SecureDouble_ValidateRules(const FSecureDoubleRules& Rules, FString& OutError)
+{
+	FSecureDouble Value;
+	Value.SetRules(Rules);
+	return Value.ValidateRules(OutError);
+}
+void UShieldUEBlueprintLibrary::SecureDouble_InitializeFromInternalRules(FSecureDouble& Value, double InitialValue) { Value.Initialize(InitialValue, Value.GetRules()); }
+
+/* BYTE */
+
+void UShieldUEBlueprintLibrary::SecureByte_Initialize(FSecureByte& Value, uint8 InitialValue, const FSecureByteRules& Rules) { Value.Initialize(InitialValue, Rules); }
+void UShieldUEBlueprintLibrary::SecureByte_Set(FSecureByte& Value, uint8 NewValue) { Value.Set(NewValue); }
+uint8 UShieldUEBlueprintLibrary::SecureByte_Get(FSecureByte& Value) { return Value.Get(); }
+bool UShieldUEBlueprintLibrary::SecureByte_Validate(FSecureByte& Value) { return Value.Validate(); }
+void UShieldUEBlueprintLibrary::SecureByte_Rekey(FSecureByte& Value) { Value.Rekey(); }
+void UShieldUEBlueprintLibrary::SecureByte_UpdateProtection(FSecureByte& Value, float DeltaSeconds) { Value.UpdateProtection(DeltaSeconds); }
+void UShieldUEBlueprintLibrary::SecureByte_ResetToDefault(FSecureByte& Value) { Value.ResetToDefault(); }
+int32 UShieldUEBlueprintLibrary::SecureByte_GetTamperCount(const FSecureByte& Value) { return static_cast<int32>(Value.GetTamperCount()); }
+ESecureValueTamperReason UShieldUEBlueprintLibrary::SecureByte_GetLastTamperReason(const FSecureByte& Value) { return Value.GetLastTamperReason(); }
+bool UShieldUEBlueprintLibrary::SecureByte_IsInitialized(const FSecureByte& Value) { return Value.IsInitialized(); }
+uint8 UShieldUEBlueprintLibrary::SecureByte_GetLastValidValue(const FSecureByte& Value) { return Value.GetLastValidValue(); }
+void UShieldUEBlueprintLibrary::SecureByte_CorruptForTesting(FSecureByte& Value) { Value.CorruptForTesting(); }
+bool UShieldUEBlueprintLibrary::SecureByte_ValidateRules(const FSecureByteRules& Rules, FString& OutError)
+{
+	FSecureByte Value;
+	Value.SetRules(Rules);
+	return Value.ValidateRules(OutError);
+}
+void UShieldUEBlueprintLibrary::SecureByte_InitializeFromInternalRules(FSecureByte& Value, uint8 InitialValue) { Value.Initialize(InitialValue, Value.GetRules()); }

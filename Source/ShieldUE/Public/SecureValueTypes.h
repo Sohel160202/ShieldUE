@@ -307,3 +307,224 @@ private:
 	uint32 ComputeIntegrity(uint8 InEncoded, uint8 InShadow, uint8 InKey) const;
 	uint8 GenerateRuntimeKey() const;
 };
+
+USTRUCT(BlueprintType, meta = (DisplayName = "Secure Int64 Rules"))
+struct SHIELDUE_API FSecureInt64Rules
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	bool bUseRange = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	int64 MinValue = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	int64 MaxValue = 100;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	int64 DefaultValue = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	ESecureValueRecoveryMode RecoveryMode = ESecureValueRecoveryMode::RestoreLastValid;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	bool bEnableAutoRekey = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules", meta = (ClampMin = "0.0"))
+	float RekeyIntervalSeconds = 1.0f;
+};
+
+USTRUCT(BlueprintType, meta = (DisplayName = "Secure Double Rules"))
+struct SHIELDUE_API FSecureDoubleRules
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	bool bUseRange = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	double MinValue = 0.0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	double MaxValue = 100.0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	double DefaultValue = 0.0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	ESecureValueRecoveryMode RecoveryMode = ESecureValueRecoveryMode::RestoreLastValid;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	bool bEnableAutoRekey = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules", meta = (ClampMin = "0.0"))
+	float RekeyIntervalSeconds = 1.0f;
+};
+
+USTRUCT(BlueprintType, meta = (DisplayName = "Secure Byte Rules"))
+struct SHIELDUE_API FSecureByteRules
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	bool bUseRange = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	uint8 MinValue = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	uint8 MaxValue = 255;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	uint8 DefaultValue = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	ESecureValueRecoveryMode RecoveryMode = ESecureValueRecoveryMode::RestoreLastValid;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	bool bEnableAutoRekey = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules", meta = (ClampMin = "0.0"))
+	float RekeyIntervalSeconds = 1.0f;
+};
+
+USTRUCT(BlueprintType, meta = (DisplayName = "Secure Int64"))
+struct SHIELDUE_API FSecureInt64
+{
+	GENERATED_BODY()
+
+private:
+	UPROPERTY() uint64 EncodedValue = 0;
+	UPROPERTY() uint64 ShadowValue = 0;
+	UPROPERTY() uint64 Key = 0;
+	UPROPERTY() uint32 Integrity = 0;
+	UPROPERTY() int64 LastValidValue = 0;
+	UPROPERTY() uint32 TamperCount = 0;
+	UPROPERTY() uint8 EncodingPattern = 0;
+	UPROPERTY() bool bInitialized = false;
+	UPROPERTY(Transient) float TimeSinceLastRekey = 0.0f;
+	UPROPERTY() ESecureValueTamperReason LastTamperReason = ESecureValueTamperReason::None;
+	UPROPERTY(EditAnywhere, Category = "ShieldUE") FSecureInt64Rules Rules;
+
+public:
+	FSecureInt64();
+	void Initialize(int64 InitialValue, const FSecureInt64Rules& InRules);
+	void Set(int64 NewValue);
+	int64 Get();
+	bool Validate();
+	void Rekey();
+	void UpdateProtection(float DeltaSeconds);
+	void ResetToDefault();
+	void CorruptForTesting();
+	bool IsInitialized() const { return bInitialized; }
+	uint32 GetTamperCount() const { return TamperCount; }
+	int64 GetLastValidValue() const { return LastValidValue; }
+	ESecureValueTamperReason GetLastTamperReason() const { return LastTamperReason; }
+	bool ValidateRules(FString& OutError) const;
+	void SetRules(const FSecureInt64Rules& InRules);
+	const FSecureInt64Rules& GetRules() const { return Rules; }
+
+private:
+	void EncodeValue(int64 InValue);
+	int64 DecodeMainValueUnchecked() const;
+	int64 DecodeShadowValueUnchecked() const;
+	bool IsWithinAllowedRange(int64 InValue) const;
+	int64 RecoverValue();
+	void RegisterTamper(ESecureValueTamperReason Reason);
+	uint32 ComputeIntegrity(uint64 InEncoded, uint64 InShadow, uint64 InKey) const;
+	uint64 GenerateRuntimeKey() const;
+};
+
+USTRUCT(BlueprintType, meta = (DisplayName = "Secure Double"))
+struct SHIELDUE_API FSecureDouble
+{
+	GENERATED_BODY()
+
+private:
+	UPROPERTY() uint64 EncodedValueBits = 0;
+	UPROPERTY() uint64 ShadowBits = 0;
+	UPROPERTY() uint64 Key = 0;
+	UPROPERTY() uint32 Integrity = 0;
+	UPROPERTY() double LastValidValue = 0.0;
+	UPROPERTY() uint32 TamperCount = 0;
+	UPROPERTY() uint8 EncodingPattern = 0;
+	UPROPERTY() bool bInitialized = false;
+	UPROPERTY(Transient) float TimeSinceLastRekey = 0.0f;
+	UPROPERTY() ESecureValueTamperReason LastTamperReason = ESecureValueTamperReason::None;
+	UPROPERTY(EditAnywhere, Category = "ShieldUE") FSecureDoubleRules Rules;
+
+public:
+	FSecureDouble();
+	void Initialize(double InitialValue, const FSecureDoubleRules& InRules);
+	void Set(double NewValue);
+	double Get();
+	bool Validate();
+	void Rekey();
+	void UpdateProtection(float DeltaSeconds);
+	void ResetToDefault();
+	void CorruptForTesting();
+	bool IsInitialized() const { return bInitialized; }
+	uint32 GetTamperCount() const { return TamperCount; }
+	double GetLastValidValue() const { return LastValidValue; }
+	ESecureValueTamperReason GetLastTamperReason() const { return LastTamperReason; }
+	bool ValidateRules(FString& OutError) const;
+	void SetRules(const FSecureDoubleRules& InRules);
+	const FSecureDoubleRules& GetRules() const { return Rules; }
+
+private:
+	void EncodeValue(double InValue);
+	double DecodeMainValueUnchecked() const;
+	double DecodeShadowValueUnchecked() const;
+	bool IsWithinAllowedRange(double InValue) const;
+	double RecoverValue();
+	void RegisterTamper(ESecureValueTamperReason Reason);
+	uint32 ComputeIntegrity(uint64 InEncoded, uint64 InShadow, uint64 InKey) const;
+	uint64 GenerateRuntimeKey() const;
+};
+
+USTRUCT(BlueprintType, meta = (DisplayName = "Secure Byte"))
+struct SHIELDUE_API FSecureByte
+{
+	GENERATED_BODY()
+
+private:
+	UPROPERTY() uint8 EncodedValue = 0;
+	UPROPERTY() uint8 ShadowValue = 0;
+	UPROPERTY() uint8 Key = 0;
+	UPROPERTY() uint32 Integrity = 0;
+	UPROPERTY() uint8 LastValidValue = 0;
+	UPROPERTY() uint32 TamperCount = 0;
+	UPROPERTY() bool bInitialized = false;
+	UPROPERTY(Transient) float TimeSinceLastRekey = 0.0f;
+	UPROPERTY() ESecureValueTamperReason LastTamperReason = ESecureValueTamperReason::None;
+	UPROPERTY(EditAnywhere, Category = "ShieldUE") FSecureByteRules Rules;
+
+public:
+	FSecureByte();
+	void Initialize(uint8 InitialValue, const FSecureByteRules& InRules);
+	void Set(uint8 NewValue);
+	uint8 Get();
+	bool Validate();
+	void Rekey();
+	void UpdateProtection(float DeltaSeconds);
+	void ResetToDefault();
+	void CorruptForTesting();
+	bool IsInitialized() const { return bInitialized; }
+	uint32 GetTamperCount() const { return TamperCount; }
+	uint8 GetLastValidValue() const { return LastValidValue; }
+	ESecureValueTamperReason GetLastTamperReason() const { return LastTamperReason; }
+	bool ValidateRules(FString& OutError) const;
+	void SetRules(const FSecureByteRules& InRules);
+	const FSecureByteRules& GetRules() const { return Rules; }
+
+private:
+	void EncodeValue(uint8 InValue);
+	uint8 DecodeMainValueUnchecked() const;
+	uint8 DecodeShadowValueUnchecked() const;
+	bool IsWithinAllowedRange(uint8 InValue) const;
+	uint8 RecoverValue();
+	void RegisterTamper(ESecureValueTamperReason Reason);
+	uint32 ComputeIntegrity(uint8 InEncoded, uint8 InShadow, uint8 InKey) const;
+	uint8 GenerateRuntimeKey() const;
+};

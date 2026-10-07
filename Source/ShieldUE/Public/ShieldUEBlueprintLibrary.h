@@ -144,4 +144,97 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Bool", meta = (ToolTip = "Initialize a Secure Bool using the rules already stored inside the variable."))
 	static void SecureBool_InitializeFromInternalRules(UPARAM(ref) FSecureBool& Value, bool InitialValue);
+
+	/* INT64 */
+
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Int64")
+	static void SecureInt64_Initialize(UPARAM(ref) FSecureInt64& Value, int64 InitialValue, const FSecureInt64Rules& Rules);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Int64")
+	static void SecureInt64_Set(UPARAM(ref) FSecureInt64& Value, int64 NewValue);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Int64")
+	static int64 SecureInt64_Get(UPARAM(ref) FSecureInt64& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Int64")
+	static bool SecureInt64_Validate(UPARAM(ref) FSecureInt64& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Int64")
+	static void SecureInt64_Rekey(UPARAM(ref) FSecureInt64& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Int64")
+	static void SecureInt64_UpdateProtection(UPARAM(ref) FSecureInt64& Value, float DeltaSeconds);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Int64")
+	static void SecureInt64_ResetToDefault(UPARAM(ref) FSecureInt64& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Int64")
+	static int32 SecureInt64_GetTamperCount(const FSecureInt64& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Int64")
+	static ESecureValueTamperReason SecureInt64_GetLastTamperReason(const FSecureInt64& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Int64")
+	static bool SecureInt64_IsInitialized(const FSecureInt64& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Int64")
+	static int64 SecureInt64_GetLastValidValue(const FSecureInt64& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Int64|Testing")
+	static void SecureInt64_CorruptForTesting(UPARAM(ref) FSecureInt64& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Int64")
+	static bool SecureInt64_ValidateRules(const FSecureInt64Rules& Rules, FString& OutError);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Int64")
+	static void SecureInt64_InitializeFromInternalRules(UPARAM(ref) FSecureInt64& Value, int64 InitialValue);
+
+	/* DOUBLE */
+
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Double")
+	static void SecureDouble_Initialize(UPARAM(ref) FSecureDouble& Value, double InitialValue, const FSecureDoubleRules& Rules);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Double")
+	static void SecureDouble_Set(UPARAM(ref) FSecureDouble& Value, double NewValue);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Double")
+	static double SecureDouble_Get(UPARAM(ref) FSecureDouble& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Double")
+	static bool SecureDouble_Validate(UPARAM(ref) FSecureDouble& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Double")
+	static void SecureDouble_Rekey(UPARAM(ref) FSecureDouble& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Double")
+	static void SecureDouble_UpdateProtection(UPARAM(ref) FSecureDouble& Value, float DeltaSeconds);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Double")
+	static void SecureDouble_ResetToDefault(UPARAM(ref) FSecureDouble& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Double")
+	static int32 SecureDouble_GetTamperCount(const FSecureDouble& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Double")
+	static ESecureValueTamperReason SecureDouble_GetLastTamperReason(const FSecureDouble& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Double")
+	static bool SecureDouble_IsInitialized(const FSecureDouble& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Double")
+	static double SecureDouble_GetLastValidValue(const FSecureDouble& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Double|Testing")
+	static void SecureDouble_CorruptForTesting(UPARAM(ref) FSecureDouble& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Double")
+	static bool SecureDouble_ValidateRules(const FSecureDoubleRules& Rules, FString& OutError);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Double")
+	static void SecureDouble_InitializeFromInternalRules(UPARAM(ref) FSecureDouble& Value, double InitialValue);
+
+	/* BYTE */
+
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Byte")
+	static void SecureByte_Initialize(UPARAM(ref) FSecureByte& Value, uint8 InitialValue, const FSecureByteRules& Rules);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Byte")
+	static void SecureByte_Set(UPARAM(ref) FSecureByte& Value, uint8 NewValue);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Byte")
+	static uint8 SecureByte_Get(UPARAM(ref) FSecureByte& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Byte")
+	static bool SecureByte_Validate(UPARAM(ref) FSecureByte& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Byte")
+	static void SecureByte_Rekey(UPARAM(ref) FSecureByte& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Byte")
+	static void SecureByte_UpdateProtection(UPARAM(ref) FSecureByte& Value, float DeltaSeconds);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Byte")
+	static void SecureByte_ResetToDefault(UPARAM(ref) FSecureByte& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Byte")
+	static int32 SecureByte_GetTamperCount(const FSecureByte& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Byte")
+	static ESecureValueTamperReason SecureByte_GetLastTamperReason(const FSecureByte& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Byte")
+	static bool SecureByte_IsInitialized(const FSecureByte& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Byte")
+	static uint8 SecureByte_GetLastValidValue(const FSecureByte& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Byte|Testing")
+	static void SecureByte_CorruptForTesting(UPARAM(ref) FSecureByte& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Byte")
+	static bool SecureByte_ValidateRules(const FSecureByteRules& Rules, FString& OutError);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Byte")
+	static void SecureByte_InitializeFromInternalRules(UPARAM(ref) FSecureByte& Value, uint8 InitialValue);
 };
