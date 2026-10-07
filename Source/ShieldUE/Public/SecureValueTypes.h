@@ -123,6 +123,9 @@ private:
 	UPROPERTY()
 	bool bInitialized = false;
 
+	UPROPERTY(Transient)
+	float TimeSinceLastRekey = 0.0f;
+
 	UPROPERTY()
 	ESecureValueTamperReason LastTamperReason = ESecureValueTamperReason::None;
 
@@ -137,6 +140,7 @@ public:
 	float Get();
 	bool Validate();
 	void Rekey();
+	void UpdateProtection(float DeltaSeconds);
 	void ResetToDefault();
 	void CorruptForTesting();
 
@@ -191,6 +195,9 @@ private:
 	UPROPERTY()
 	bool bInitialized = false;
 
+	UPROPERTY(Transient)
+	float TimeSinceLastRekey = 0.0f;
+
 	UPROPERTY()
 	ESecureValueTamperReason LastTamperReason = ESecureValueTamperReason::None;
 
@@ -205,6 +212,7 @@ public:
 	int32 Get();
 	bool Validate();
 	void Rekey();
+	void UpdateProtection(float DeltaSeconds);
 	void ResetToDefault();
 	void CorruptForTesting();
 
@@ -256,6 +264,9 @@ private:
 	UPROPERTY()
 	bool bInitialized = false;
 
+	UPROPERTY(Transient)
+	float TimeSinceLastRekey = 0.0f;
+
 	UPROPERTY()
 	ESecureValueTamperReason LastTamperReason = ESecureValueTamperReason::None;
 
@@ -270,6 +281,7 @@ public:
 	bool Get();
 	bool Validate();
 	void Rekey();
+	void UpdateProtection(float DeltaSeconds);
 	void ResetToDefault();
 	void CorruptForTesting();
 

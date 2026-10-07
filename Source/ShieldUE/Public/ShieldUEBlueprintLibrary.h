@@ -28,6 +28,18 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Float", meta = (ToolTip = "Generate a new runtime key and re-encode the Secure Float."))
 	static void SecureFloat_Rekey(UPARAM(ref) FSecureFloat& Value);
 
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Float", meta = (ToolTip = "Update protection timers. Call from Tick when automatic re-keying is enabled."))
+	static void SecureFloat_UpdateProtection(UPARAM(ref) FSecureFloat& Value, float DeltaSeconds);
+
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Float", meta = (ToolTip = "Restore the Secure Float to its configured default value."))
+	static void SecureFloat_ResetToDefault(UPARAM(ref) FSecureFloat& Value);
+
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Float", meta = (ToolTip = "Return the number of detected tampering events."))
+	static int32 SecureFloat_GetTamperCount(const FSecureFloat& Value);
+
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Float", meta = (ToolTip = "Return the reason for the most recent detected tampering event."))
+	static ESecureValueTamperReason SecureFloat_GetLastTamperReason(const FSecureFloat& Value);
+
 	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Float", meta = (ToolTip = "Initialize a Secure Float using the rules already stored inside the variable."))
 	static void SecureFloat_InitializeFromInternalRules(UPARAM(ref) FSecureFloat& Value, float InitialValue);
 
@@ -49,6 +61,18 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Int", meta = (ToolTip = "Generate a new runtime key and re-encode the Secure Integer."))
 	static void SecureInt_Rekey(UPARAM(ref) FSecureInt32& Value);
 
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Int", meta = (ToolTip = "Update protection timers. Call from Tick when automatic re-keying is enabled."))
+	static void SecureInt_UpdateProtection(UPARAM(ref) FSecureInt32& Value, float DeltaSeconds);
+
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Int", meta = (ToolTip = "Restore the Secure Integer to its configured default value."))
+	static void SecureInt_ResetToDefault(UPARAM(ref) FSecureInt32& Value);
+
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Int", meta = (ToolTip = "Return the number of detected tampering events."))
+	static int32 SecureInt_GetTamperCount(const FSecureInt32& Value);
+
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Int", meta = (ToolTip = "Return the reason for the most recent detected tampering event."))
+	static ESecureValueTamperReason SecureInt_GetLastTamperReason(const FSecureInt32& Value);
+
 	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Int", meta = (ToolTip = "Initialize a Secure Int using the rules already stored inside the variable."))
 	static void SecureInt_InitializeFromInternalRules(UPARAM(ref) FSecureInt32& Value, int32 InitialValue);
 
@@ -69,6 +93,18 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Bool", meta = (ToolTip = "Generate a new runtime key and re-encode the Secure Bool."))
 	static void SecureBool_Rekey(UPARAM(ref) FSecureBool& Value);
+
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Bool", meta = (ToolTip = "Update protection timers. Call from Tick when automatic re-keying is enabled."))
+	static void SecureBool_UpdateProtection(UPARAM(ref) FSecureBool& Value, float DeltaSeconds);
+
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Bool", meta = (ToolTip = "Restore the Secure Bool to its configured default value."))
+	static void SecureBool_ResetToDefault(UPARAM(ref) FSecureBool& Value);
+
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Bool", meta = (ToolTip = "Return the number of detected tampering events."))
+	static int32 SecureBool_GetTamperCount(const FSecureBool& Value);
+
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Bool", meta = (ToolTip = "Return the reason for the most recent detected tampering event."))
+	static ESecureValueTamperReason SecureBool_GetLastTamperReason(const FSecureBool& Value);
 
 	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Bool", meta = (ToolTip = "Initialize a Secure Bool using the rules already stored inside the variable."))
 	static void SecureBool_InitializeFromInternalRules(UPARAM(ref) FSecureBool& Value, bool InitialValue);

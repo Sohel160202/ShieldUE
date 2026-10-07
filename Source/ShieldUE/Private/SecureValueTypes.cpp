@@ -43,6 +43,7 @@ FSecureFloat::FSecureFloat()
 	TamperCount = 0;
 	EncodingPattern = 0;
 	bInitialized = false;
+	TimeSinceLastRekey = 0.0f;
 	LastTamperReason = ESecureValueTamperReason::None;
 }
 
@@ -52,6 +53,7 @@ void FSecureFloat::Initialize(float InitialValue, const FSecureFloatRules& InRul
 	Key = GenerateRuntimeKey();
 	EncodingPattern = static_cast<uint8>(FMath::RandRange(0, 2));
 	bInitialized = true;
+	TimeSinceLastRekey = 0.0f;
 	LastTamperReason = ESecureValueTamperReason::None;
 
 	Set(InitialValue);
@@ -64,6 +66,7 @@ void FSecureFloat::Set(float NewValue)
 		Key = GenerateRuntimeKey();
 		EncodingPattern = static_cast<uint8>(FMath::RandRange(0, 2));
 		bInitialized = true;
+		TimeSinceLastRekey = 0.0f;
 		LastTamperReason = ESecureValueTamperReason::None;
 	}
 
@@ -159,6 +162,21 @@ void FSecureFloat::Rekey()
 	const float CurrentValue = Get();
 	Key = GenerateRuntimeKey();
 	EncodeValue(CurrentValue);
+	TimeSinceLastRekey = 0.0f;
+}
+
+void FSecureFloat::UpdateProtection(float DeltaSeconds)
+{
+	if (!bInitialized || !Rules.bEnableAutoRekey || Rules.RekeyIntervalSeconds <= 0.0f)
+	{
+		return;
+	}
+
+	TimeSinceLastRekey += FMath::Max(0.0f, DeltaSeconds);
+	if (TimeSinceLastRekey >= Rules.RekeyIntervalSeconds)
+	{
+		Rekey();
+	}
 }
 
 void FSecureFloat::ResetToDefault()
@@ -172,6 +190,7 @@ void FSecureFloat::ResetToDefault()
 
 	EncodeValue(Rules.DefaultValue);
 	LastValidValue = Rules.DefaultValue;
+	TimeSinceLastRekey = 0.0f;
 	LastTamperReason = ESecureValueTamperReason::None;
 }
 
@@ -308,6 +327,7 @@ FSecureInt32::FSecureInt32()
 	TamperCount = 0;
 	EncodingPattern = 0;
 	bInitialized = false;
+	TimeSinceLastRekey = 0.0f;
 	LastTamperReason = ESecureValueTamperReason::None;
 }
 
@@ -317,6 +337,7 @@ void FSecureInt32::Initialize(int32 InitialValue, const FSecureInt32Rules& InRul
 	Key = GenerateRuntimeKey();
 	EncodingPattern = static_cast<uint8>(FMath::RandRange(0, 3));
 	bInitialized = true;
+	TimeSinceLastRekey = 0.0f;
 	LastTamperReason = ESecureValueTamperReason::None;
 
 	Set(InitialValue);
@@ -329,6 +350,7 @@ void FSecureInt32::Set(int32 NewValue)
 		Key = GenerateRuntimeKey();
 		EncodingPattern = static_cast<uint8>(FMath::RandRange(0, 3));
 		bInitialized = true;
+		TimeSinceLastRekey = 0.0f;
 		LastTamperReason = ESecureValueTamperReason::None;
 	}
 
@@ -422,6 +444,21 @@ void FSecureInt32::Rekey()
 	const int32 CurrentValue = Get();
 	Key = GenerateRuntimeKey();
 	EncodeValue(CurrentValue);
+	TimeSinceLastRekey = 0.0f;
+}
+
+void FSecureInt32::UpdateProtection(float DeltaSeconds)
+{
+	if (!bInitialized || !Rules.bEnableAutoRekey || Rules.RekeyIntervalSeconds <= 0.0f)
+	{
+		return;
+	}
+
+	TimeSinceLastRekey += FMath::Max(0.0f, DeltaSeconds);
+	if (TimeSinceLastRekey >= Rules.RekeyIntervalSeconds)
+	{
+		Rekey();
+	}
 }
 
 void FSecureInt32::ResetToDefault()
@@ -436,6 +473,7 @@ void FSecureInt32::ResetToDefault()
 	const int32 DefaultInt = static_cast<int32>(Rules.DefaultValue);
 	EncodeValue(DefaultInt);
 	LastValidValue = DefaultInt;
+	TimeSinceLastRekey = 0.0f;
 	LastTamperReason = ESecureValueTamperReason::None;
 }
 
@@ -588,6 +626,7 @@ FSecureBool::FSecureBool()
 	LastValidValue = false;
 	TamperCount = 0;
 	bInitialized = false;
+	TimeSinceLastRekey = 0.0f;
 	LastTamperReason = ESecureValueTamperReason::None;
 }
 
@@ -596,6 +635,7 @@ void FSecureBool::Initialize(bool InitialValue, const FSecureBoolRules& InRules)
 	Rules = InRules;
 	Key = GenerateRuntimeKey();
 	bInitialized = true;
+	TimeSinceLastRekey = 0.0f;
 	LastTamperReason = ESecureValueTamperReason::None;
 
 	Set(InitialValue);
@@ -607,6 +647,7 @@ void FSecureBool::Set(bool NewValue)
 	{
 		Key = GenerateRuntimeKey();
 		bInitialized = true;
+		TimeSinceLastRekey = 0.0f;
 		LastTamperReason = ESecureValueTamperReason::None;
 	}
 
@@ -679,6 +720,21 @@ void FSecureBool::Rekey()
 	const bool CurrentValue = Get();
 	Key = GenerateRuntimeKey();
 	EncodeValue(CurrentValue);
+	TimeSinceLastRekey = 0.0f;
+}
+
+void FSecureBool::UpdateProtection(float DeltaSeconds)
+{
+	if (!bInitialized || !Rules.bEnableAutoRekey || Rules.RekeyIntervalSeconds <= 0.0f)
+	{
+		return;
+	}
+
+	TimeSinceLastRekey += FMath::Max(0.0f, DeltaSeconds);
+	if (TimeSinceLastRekey >= Rules.RekeyIntervalSeconds)
+	{
+		Rekey();
+	}
 }
 
 void FSecureBool::ResetToDefault()
@@ -692,6 +748,7 @@ void FSecureBool::ResetToDefault()
 	const bool DefaultValue = Rules.DefaultValue;
 	EncodeValue(DefaultValue);
 	LastValidValue = DefaultValue;
+	TimeSinceLastRekey = 0.0f;
 	LastTamperReason = ESecureValueTamperReason::None;
 }
 
