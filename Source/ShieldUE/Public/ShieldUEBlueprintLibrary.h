@@ -237,4 +237,52 @@ public:
 	static bool SecureByte_ValidateRules(const FSecureByteRules& Rules, FString& OutError);
 	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Byte")
 	static void SecureByte_InitializeFromInternalRules(UPARAM(ref) FSecureByte& Value, uint8 InitialValue);
+
+	/* VECTOR */
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Vector") static void SecureVector_Initialize(UPARAM(ref) FSecureVector& Value, const FVector& InitialValue, const FSecureVectorRules& Rules);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Vector") static void SecureVector_Set(UPARAM(ref) FSecureVector& Value, const FVector& NewValue);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Vector") static FVector SecureVector_Get(UPARAM(ref) FSecureVector& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Vector") static bool SecureVector_Validate(UPARAM(ref) FSecureVector& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Vector") static void SecureVector_Rekey(UPARAM(ref) FSecureVector& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Vector") static void SecureVector_UpdateProtection(UPARAM(ref) FSecureVector& Value, float DeltaSeconds);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Vector") static void SecureVector_ResetToDefault(UPARAM(ref) FSecureVector& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Vector") static int32 SecureVector_GetTamperCount(const FSecureVector& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Vector") static ESecureValueTamperReason SecureVector_GetLastTamperReason(const FSecureVector& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Vector") static bool SecureVector_IsInitialized(const FSecureVector& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Vector") static FVector SecureVector_GetLastValidValue(const FSecureVector& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Vector|Testing") static void SecureVector_CorruptForTesting(UPARAM(ref) FSecureVector& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Vector") static bool SecureVector_ValidateRules(const FSecureVectorRules& Rules, FString& OutError);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Vector") static void SecureVector_InitializeFromInternalRules(UPARAM(ref) FSecureVector& Value, const FVector& InitialValue);
+
+	/* ROTATOR */
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Rotator") static void SecureRotator_Initialize(UPARAM(ref) FSecureRotator& Value, const FRotator& InitialValue, const FSecureVectorRules& Rules);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Rotator") static void SecureRotator_Set(UPARAM(ref) FSecureRotator& Value, const FRotator& NewValue);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Rotator") static FRotator SecureRotator_Get(UPARAM(ref) FSecureRotator& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Rotator") static bool SecureRotator_Validate(UPARAM(ref) FSecureRotator& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Rotator") static void SecureRotator_Rekey(UPARAM(ref) FSecureRotator& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Rotator") static void SecureRotator_UpdateProtection(UPARAM(ref) FSecureRotator& Value, float DeltaSeconds);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Rotator") static void SecureRotator_ResetToDefault(UPARAM(ref) FSecureRotator& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Rotator") static int32 SecureRotator_GetTamperCount(const FSecureRotator& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Rotator") static ESecureValueTamperReason SecureRotator_GetLastTamperReason(const FSecureRotator& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Rotator") static bool SecureRotator_IsInitialized(const FSecureRotator& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Rotator") static FRotator SecureRotator_GetLastValidValue(const FSecureRotator& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Rotator|Testing") static void SecureRotator_CorruptForTesting(UPARAM(ref) FSecureRotator& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Rotator") static bool SecureRotator_ValidateRules(const FSecureVectorRules& Rules, FString& OutError);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Rotator") static void SecureRotator_InitializeFromInternalRules(UPARAM(ref) FSecureRotator& Value, const FRotator& InitialValue);
+
+	/* TRANSFORM */
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Transform") static void SecureTransform_Initialize(UPARAM(ref) FSecureTransform& Value, const FTransform& InitialValue, const FSecureTransformRules& Rules);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Transform") static void SecureTransform_Set(UPARAM(ref) FSecureTransform& Value, const FTransform& NewValue);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Transform") static FTransform SecureTransform_Get(UPARAM(ref) FSecureTransform& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Transform") static bool SecureTransform_Validate(UPARAM(ref) FSecureTransform& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Transform") static void SecureTransform_Rekey(UPARAM(ref) FSecureTransform& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Transform") static void SecureTransform_UpdateProtection(UPARAM(ref) FSecureTransform& Value, float DeltaSeconds);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Transform") static void SecureTransform_ResetToDefault(UPARAM(ref) FSecureTransform& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Transform") static int32 SecureTransform_GetTamperCount(const FSecureTransform& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Transform") static ESecureValueTamperReason SecureTransform_GetLastTamperReason(const FSecureTransform& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Transform") static bool SecureTransform_IsInitialized(const FSecureTransform& Value);
+	UFUNCTION(BlueprintPure, Category = "ShieldUE|Transform") static FTransform SecureTransform_GetLastValidValue(const FSecureTransform& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Transform|Testing") static void SecureTransform_CorruptForTesting(UPARAM(ref) FSecureTransform& Value);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Transform") static bool SecureTransform_ValidateRules(const FSecureTransformRules& Rules, FString& OutError);
+	UFUNCTION(BlueprintCallable, Category = "ShieldUE|Transform") static void SecureTransform_InitializeFromInternalRules(UPARAM(ref) FSecureTransform& Value, const FTransform& InitialValue);
 };

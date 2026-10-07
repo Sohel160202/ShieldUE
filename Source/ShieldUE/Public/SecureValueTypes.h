@@ -528,3 +528,143 @@ private:
 	uint32 ComputeIntegrity(uint8 InEncoded, uint8 InShadow, uint8 InKey) const;
 	uint8 GenerateRuntimeKey() const;
 };
+
+USTRUCT(BlueprintType, meta = (DisplayName = "Secure Vector Rules"))
+struct SHIELDUE_API FSecureVectorRules
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	FSecureDoubleRules ComponentRules;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	FVector DefaultValue = FVector::ZeroVector;
+};
+
+USTRUCT(BlueprintType, meta = (DisplayName = "Secure Vector"))
+struct SHIELDUE_API FSecureVector
+{
+	GENERATED_BODY()
+
+private:
+	UPROPERTY() FSecureDouble X;
+	UPROPERTY() FSecureDouble Y;
+	UPROPERTY() FSecureDouble Z;
+	UPROPERTY() FVector LastValidValue = FVector::ZeroVector;
+	UPROPERTY() uint32 AggregateIntegrity = 0;
+	UPROPERTY() uint32 TamperCount = 0;
+	UPROPERTY() bool bInitialized = false;
+	UPROPERTY() ESecureValueTamperReason LastTamperReason = ESecureValueTamperReason::None;
+	UPROPERTY(EditAnywhere, Category = "ShieldUE") FSecureVectorRules Rules;
+
+public:
+	FSecureVector();
+	void Initialize(const FVector& InitialValue, const FSecureVectorRules& InRules);
+	void Set(const FVector& NewValue);
+	FVector Get();
+	bool Validate();
+	void Rekey();
+	void UpdateProtection(float DeltaSeconds);
+	void ResetToDefault();
+	void CorruptForTesting();
+	bool IsInitialized() const { return bInitialized; }
+	uint32 GetTamperCount() const;
+	FVector GetLastValidValue() const { return LastValidValue; }
+	ESecureValueTamperReason GetLastTamperReason() const { return LastTamperReason; }
+	bool ValidateRules(FString& OutError) const;
+	void SetRules(const FSecureVectorRules& InRules);
+	const FSecureVectorRules& GetRules() const { return Rules; }
+
+private:
+	void RegisterTamper(ESecureValueTamperReason Reason);
+	void RecoverValue();
+	uint32 ComputeAggregateIntegrity(const FVector& Value) const;
+};
+
+USTRUCT(BlueprintType, meta = (DisplayName = "Secure Rotator"))
+struct SHIELDUE_API FSecureRotator
+{
+	GENERATED_BODY()
+
+private:
+	UPROPERTY() FSecureVector Components;
+	UPROPERTY() FRotator LastValidValue = FRotator::ZeroRotator;
+	UPROPERTY() uint32 AggregateIntegrity = 0;
+	UPROPERTY() uint32 TamperCount = 0;
+	UPROPERTY() bool bInitialized = false;
+	UPROPERTY() ESecureValueTamperReason LastTamperReason = ESecureValueTamperReason::None;
+	UPROPERTY(EditAnywhere, Category = "ShieldUE") FSecureVectorRules Rules;
+
+public:
+	FSecureRotator();
+	void Initialize(const FRotator& InitialValue, const FSecureVectorRules& InRules);
+	void Set(const FRotator& NewValue);
+	FRotator Get();
+	bool Validate();
+	void Rekey();
+	void UpdateProtection(float DeltaSeconds);
+	void ResetToDefault();
+	void CorruptForTesting();
+	bool IsInitialized() const { return bInitialized; }
+	uint32 GetTamperCount() const;
+	FRotator GetLastValidValue() const { return LastValidValue; }
+	ESecureValueTamperReason GetLastTamperReason() const { return LastTamperReason; }
+	bool ValidateRules(FString& OutError) const;
+	void SetRules(const FSecureVectorRules& InRules);
+	const FSecureVectorRules& GetRules() const { return Rules; }
+
+private:
+	void RegisterTamper(ESecureValueTamperReason Reason);
+	uint32 ComputeAggregateIntegrity(const FRotator& Value) const;
+};
+
+USTRUCT(BlueprintType, meta = (DisplayName = "Secure Transform Rules"))
+struct SHIELDUE_API FSecureTransformRules
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	FSecureDoubleRules ComponentRules;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ShieldUE|Rules")
+	FTransform DefaultValue = FTransform::Identity;
+};
+
+USTRUCT(BlueprintType, meta = (DisplayName = "Secure Transform"))
+struct SHIELDUE_API FSecureTransform
+{
+	GENERATED_BODY()
+
+private:
+	UPROPERTY() FSecureVector Location;
+	UPROPERTY() FSecureRotator Rotation;
+	UPROPERTY() FSecureVector Scale3D;
+	UPROPERTY() FTransform LastValidValue = FTransform::Identity;
+	UPROPERTY() uint32 AggregateIntegrity = 0;
+	UPROPERTY() uint32 TamperCount = 0;
+	UPROPERTY() bool bInitialized = false;
+	UPROPERTY() ESecureValueTamperReason LastTamperReason = ESecureValueTamperReason::None;
+	UPROPERTY(EditAnywhere, Category = "ShieldUE") FSecureTransformRules Rules;
+
+public:
+	FSecureTransform();
+	void Initialize(const FTransform& InitialValue, const FSecureTransformRules& InRules);
+	void Set(const FTransform& NewValue);
+	FTransform Get();
+	bool Validate();
+	void Rekey();
+	void UpdateProtection(float DeltaSeconds);
+	void ResetToDefault();
+	void CorruptForTesting();
+	bool IsInitialized() const { return bInitialized; }
+	uint32 GetTamperCount() const;
+	FTransform GetLastValidValue() const { return LastValidValue; }
+	ESecureValueTamperReason GetLastTamperReason() const { return LastTamperReason; }
+	bool ValidateRules(FString& OutError) const;
+	void SetRules(const FSecureTransformRules& InRules);
+	const FSecureTransformRules& GetRules() const { return Rules; }
+
+private:
+	void RegisterTamper(ESecureValueTamperReason Reason);
+	uint32 ComputeAggregateIntegrity(const FTransform& Value) const;
+};

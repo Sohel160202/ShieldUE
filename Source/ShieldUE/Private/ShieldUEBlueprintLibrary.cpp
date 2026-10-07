@@ -290,3 +290,69 @@ bool UShieldUEBlueprintLibrary::SecureByte_ValidateRules(const FSecureByteRules&
 	return Value.ValidateRules(OutError);
 }
 void UShieldUEBlueprintLibrary::SecureByte_InitializeFromInternalRules(FSecureByte& Value, uint8 InitialValue) { Value.Initialize(InitialValue, Value.GetRules()); }
+
+/* VECTOR */
+
+void UShieldUEBlueprintLibrary::SecureVector_Initialize(FSecureVector& Value, const FVector& InitialValue, const FSecureVectorRules& Rules) { Value.Initialize(InitialValue, Rules); }
+void UShieldUEBlueprintLibrary::SecureVector_Set(FSecureVector& Value, const FVector& NewValue) { Value.Set(NewValue); }
+FVector UShieldUEBlueprintLibrary::SecureVector_Get(FSecureVector& Value) { return Value.Get(); }
+bool UShieldUEBlueprintLibrary::SecureVector_Validate(FSecureVector& Value) { return Value.Validate(); }
+void UShieldUEBlueprintLibrary::SecureVector_Rekey(FSecureVector& Value) { Value.Rekey(); }
+void UShieldUEBlueprintLibrary::SecureVector_UpdateProtection(FSecureVector& Value, float DeltaSeconds) { Value.UpdateProtection(DeltaSeconds); }
+void UShieldUEBlueprintLibrary::SecureVector_ResetToDefault(FSecureVector& Value) { Value.ResetToDefault(); }
+int32 UShieldUEBlueprintLibrary::SecureVector_GetTamperCount(const FSecureVector& Value) { return static_cast<int32>(Value.GetTamperCount()); }
+ESecureValueTamperReason UShieldUEBlueprintLibrary::SecureVector_GetLastTamperReason(const FSecureVector& Value) { return Value.GetLastTamperReason(); }
+bool UShieldUEBlueprintLibrary::SecureVector_IsInitialized(const FSecureVector& Value) { return Value.IsInitialized(); }
+FVector UShieldUEBlueprintLibrary::SecureVector_GetLastValidValue(const FSecureVector& Value) { return Value.GetLastValidValue(); }
+void UShieldUEBlueprintLibrary::SecureVector_CorruptForTesting(FSecureVector& Value) { Value.CorruptForTesting(); }
+bool UShieldUEBlueprintLibrary::SecureVector_ValidateRules(const FSecureVectorRules& Rules, FString& OutError)
+{
+	FSecureVector Value;
+	Value.SetRules(Rules);
+	return Value.ValidateRules(OutError);
+}
+void UShieldUEBlueprintLibrary::SecureVector_InitializeFromInternalRules(FSecureVector& Value, const FVector& InitialValue) { Value.Initialize(InitialValue, Value.GetRules()); }
+
+/* ROTATOR */
+
+void UShieldUEBlueprintLibrary::SecureRotator_Initialize(FSecureRotator& Value, const FRotator& InitialValue, const FSecureVectorRules& Rules) { Value.Initialize(InitialValue, Rules); }
+void UShieldUEBlueprintLibrary::SecureRotator_Set(FSecureRotator& Value, const FRotator& NewValue) { Value.Set(NewValue); }
+FRotator UShieldUEBlueprintLibrary::SecureRotator_Get(FSecureRotator& Value) { return Value.Get(); }
+bool UShieldUEBlueprintLibrary::SecureRotator_Validate(FSecureRotator& Value) { return Value.Validate(); }
+void UShieldUEBlueprintLibrary::SecureRotator_Rekey(FSecureRotator& Value) { Value.Rekey(); }
+void UShieldUEBlueprintLibrary::SecureRotator_UpdateProtection(FSecureRotator& Value, float DeltaSeconds) { Value.UpdateProtection(DeltaSeconds); }
+void UShieldUEBlueprintLibrary::SecureRotator_ResetToDefault(FSecureRotator& Value) { Value.ResetToDefault(); }
+int32 UShieldUEBlueprintLibrary::SecureRotator_GetTamperCount(const FSecureRotator& Value) { return static_cast<int32>(Value.GetTamperCount()); }
+ESecureValueTamperReason UShieldUEBlueprintLibrary::SecureRotator_GetLastTamperReason(const FSecureRotator& Value) { return Value.GetLastTamperReason(); }
+bool UShieldUEBlueprintLibrary::SecureRotator_IsInitialized(const FSecureRotator& Value) { return Value.IsInitialized(); }
+FRotator UShieldUEBlueprintLibrary::SecureRotator_GetLastValidValue(const FSecureRotator& Value) { return Value.GetLastValidValue(); }
+void UShieldUEBlueprintLibrary::SecureRotator_CorruptForTesting(FSecureRotator& Value) { Value.CorruptForTesting(); }
+bool UShieldUEBlueprintLibrary::SecureRotator_ValidateRules(const FSecureVectorRules& Rules, FString& OutError)
+{
+	FSecureRotator Value;
+	Value.SetRules(Rules);
+	return Value.ValidateRules(OutError);
+}
+void UShieldUEBlueprintLibrary::SecureRotator_InitializeFromInternalRules(FSecureRotator& Value, const FRotator& InitialValue) { Value.Initialize(InitialValue, Value.GetRules()); }
+
+/* TRANSFORM */
+
+void UShieldUEBlueprintLibrary::SecureTransform_Initialize(FSecureTransform& Value, const FTransform& InitialValue, const FSecureTransformRules& Rules) { Value.Initialize(InitialValue, Rules); }
+void UShieldUEBlueprintLibrary::SecureTransform_Set(FSecureTransform& Value, const FTransform& NewValue) { Value.Set(NewValue); }
+FTransform UShieldUEBlueprintLibrary::SecureTransform_Get(FSecureTransform& Value) { return Value.Get(); }
+bool UShieldUEBlueprintLibrary::SecureTransform_Validate(FSecureTransform& Value) { return Value.Validate(); }
+void UShieldUEBlueprintLibrary::SecureTransform_Rekey(FSecureTransform& Value) { Value.Rekey(); }
+void UShieldUEBlueprintLibrary::SecureTransform_UpdateProtection(FSecureTransform& Value, float DeltaSeconds) { Value.UpdateProtection(DeltaSeconds); }
+void UShieldUEBlueprintLibrary::SecureTransform_ResetToDefault(FSecureTransform& Value) { Value.ResetToDefault(); }
+int32 UShieldUEBlueprintLibrary::SecureTransform_GetTamperCount(const FSecureTransform& Value) { return static_cast<int32>(Value.GetTamperCount()); }
+ESecureValueTamperReason UShieldUEBlueprintLibrary::SecureTransform_GetLastTamperReason(const FSecureTransform& Value) { return Value.GetLastTamperReason(); }
+bool UShieldUEBlueprintLibrary::SecureTransform_IsInitialized(const FSecureTransform& Value) { return Value.IsInitialized(); }
+FTransform UShieldUEBlueprintLibrary::SecureTransform_GetLastValidValue(const FSecureTransform& Value) { return Value.GetLastValidValue(); }
+void UShieldUEBlueprintLibrary::SecureTransform_CorruptForTesting(FSecureTransform& Value) { Value.CorruptForTesting(); }
+bool UShieldUEBlueprintLibrary::SecureTransform_ValidateRules(const FSecureTransformRules& Rules, FString& OutError)
+{
+	FSecureTransform Value;
+	Value.SetRules(Rules);
+	return Value.ValidateRules(OutError);
+}
+void UShieldUEBlueprintLibrary::SecureTransform_InitializeFromInternalRules(FSecureTransform& Value, const FTransform& InitialValue) { Value.Initialize(InitialValue, Value.GetRules()); }

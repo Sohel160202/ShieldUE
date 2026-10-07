@@ -2,6 +2,7 @@
 #include "ShieldUE.h"
 #include "HAL/PlatformTime.h"
 #include "Misc/DateTime.h"
+#include "Misc/Crc.h"
 
 namespace ShieldUEPrivate
 {
@@ -1703,4 +1704,324 @@ uint8 FSecureByte::GenerateRuntimeKey() const
 	const uint64 Cycles = FPlatformTime::Cycles64();
 	const uint64 TimePart = static_cast<uint64>(FDateTime::UtcNow().GetTicks());
 	return static_cast<uint8>((Cycles ^ TimePart ^ 0x6Du) & 0xFFu);
+}
+
+/* =========================
+   Structured secure values
+   ========================= */
+
+static uint32 ShieldUEHashValue(const void* Data, SIZE_T Size, uint32 Seed = 2166136261u)
+{
+	return HashCombine(Seed, FCrc::MemCrc32(Data, Size));
+}
+
+FSecureVector::FSecureVector() = default;
+
+bool FSecureVector::ValidateRules(FString& OutError) const
+{
+	FSecureDouble TestValue;
+	TestValue.SetRules(Rules.ComponentRules);
+	if (!TestValue.ValidateRules(OutError)) return false;
+	if (!Rules.DefaultValue.ContainsNaN()) return true;
+	OutError = TEXT("Vector default value cannot contain NaN.");
+	return false;
+}
+
+void FSecureVector::SetRules(const FSecureVectorRules& InRules)
+{
+	Rules = InRules;
+	FString RuleError;
+	if (!ValidateRules(RuleError)) UE_LOG(LogShieldUE, Warning, TEXT("Invalid Secure Vector rules: %s"), *RuleError);
+}
+
+void FSecureVector::Initialize(const FVector& InitialValue, const FSecureVectorRules& InRules)
+{
+	Rules = InRules;
+	FString RuleError;
+	if (!ValidateRules(RuleError)) UE_LOG(LogShieldUE, Warning, TEXT("Invalid Secure Vector rules: %s"), *RuleError);
+	X.Initialize(InitialValue.X, Rules.ComponentRules);
+	Y.Initialize(InitialValue.Y, Rules.ComponentRules);
+	Z.Initialize(InitialValue.Z, Rules.ComponentRules);
+	LastValidValue = InitialValue;
+	bInitialized = true;
+	LastTamperReason = ESecureValueTamperReason::None;
+	AggregateIntegrity = ComputeAggregateIntegrity(InitialValue);
+}
+
+void FSecureVector::Set(const FVector& NewValue)
+{
+	if (!bInitialized) Initialize(NewValue, Rules);
+	else
+	{
+		X.Set(NewValue.X);
+		Y.Set(NewValue.Y);
+		Z.Set(NewValue.Z);
+		LastValidValue = NewValue;
+		LastTamperReason = ESecureValueTamperReason::None;
+		AggregateIntegrity = ComputeAggregateIntegrity(NewValue);
+	}
+}
+
+FVector FSecureVector::Get()
+{
+	if (!bInitialized)
+	{
+		RegisterTamper(ESecureValueTamperReason::NotInitialized);
+		return Rules.DefaultValue;
+	}
+	if (!X.Validate() || !Y.Validate() || !Z.Validate())
+	{
+		RegisterTamper(ESecureValueTamperReason::IntegrityMismatch);
+		RecoverValue();
+		return LastValidValue;
+	}
+	const FVector Current(X.Get(), Y.Get(), Z.Get());
+	if (ComputeAggregateIntegrity(Current) != AggregateIntegrity)
+	{
+		RegisterTamper(ESecureValueTamperReason::IntegrityMismatch);
+		RecoverValue();
+		return LastValidValue;
+	}
+	return Current;
+}
+
+bool FSecureVector::Validate()
+{
+	if (!bInitialized)
+	{
+		RegisterTamper(ESecureValueTamperReason::NotInitialized);
+		return false;
+	}
+	if (!X.Validate() || !Y.Validate() || !Z.Validate())
+	{
+		RegisterTamper(ESecureValueTamperReason::IntegrityMismatch);
+		return false;
+	}
+	const FVector Current(X.Get(), Y.Get(), Z.Get());
+	if (ComputeAggregateIntegrity(Current) != AggregateIntegrity)
+	{
+		RegisterTamper(ESecureValueTamperReason::IntegrityMismatch);
+		return false;
+	}
+	return true;
+}
+
+void FSecureVector::Rekey()
+{
+	if (!bInitialized) return;
+	X.Rekey(); Y.Rekey(); Z.Rekey();
+	AggregateIntegrity = ComputeAggregateIntegrity(LastValidValue);
+}
+
+void FSecureVector::UpdateProtection(float DeltaSeconds)
+{
+	if (!bInitialized) return;
+	X.UpdateProtection(DeltaSeconds); Y.UpdateProtection(DeltaSeconds); Z.UpdateProtection(DeltaSeconds);
+	AggregateIntegrity = ComputeAggregateIntegrity(LastValidValue);
+}
+
+void FSecureVector::ResetToDefault()
+{
+	Set(Rules.DefaultValue);
+}
+
+void FSecureVector::CorruptForTesting()
+{
+	X.CorruptForTesting();
+}
+
+uint32 FSecureVector::GetTamperCount() const
+{
+	return TamperCount + X.GetTamperCount() + Y.GetTamperCount() + Z.GetTamperCount();
+}
+
+void FSecureVector::RegisterTamper(ESecureValueTamperReason Reason)
+{
+	++TamperCount;
+	LastTamperReason = Reason;
+}
+
+void FSecureVector::RecoverValue()
+{
+	Set(LastValidValue);
+}
+
+uint32 FSecureVector::ComputeAggregateIntegrity(const FVector& Value) const
+{
+	uint32 Hash = ShieldUEHashValue(&Value.X, sizeof(Value.X));
+	Hash = ShieldUEHashValue(&Value.Y, sizeof(Value.Y), Hash);
+	return ShieldUEHashValue(&Value.Z, sizeof(Value.Z), Hash);
+}
+
+FSecureRotator::FSecureRotator() = default;
+
+bool FSecureRotator::ValidateRules(FString& OutError) const
+{
+	return Components.ValidateRules(OutError);
+}
+
+void FSecureRotator::SetRules(const FSecureVectorRules& InRules)
+{
+	Rules = InRules;
+	Components.SetRules(InRules);
+}
+
+void FSecureRotator::Initialize(const FRotator& InitialValue, const FSecureVectorRules& InRules)
+{
+	Rules = InRules;
+	Components.Initialize(FVector(InitialValue.Pitch, InitialValue.Yaw, InitialValue.Roll), InRules);
+	LastValidValue = InitialValue;
+	bInitialized = true;
+	LastTamperReason = ESecureValueTamperReason::None;
+	AggregateIntegrity = ComputeAggregateIntegrity(InitialValue);
+}
+
+void FSecureRotator::Set(const FRotator& NewValue)
+{
+	if (!bInitialized) Initialize(NewValue, Rules);
+	else
+	{
+		Components.Set(FVector(NewValue.Pitch, NewValue.Yaw, NewValue.Roll));
+		LastValidValue = NewValue;
+		LastTamperReason = ESecureValueTamperReason::None;
+		AggregateIntegrity = ComputeAggregateIntegrity(NewValue);
+	}
+}
+
+FRotator FSecureRotator::Get()
+{
+	if (!bInitialized)
+	{
+		RegisterTamper(ESecureValueTamperReason::NotInitialized);
+		const FVector& Default = Rules.DefaultValue;
+		return FRotator(Default.X, Default.Y, Default.Z);
+	}
+	if (!Components.Validate())
+	{
+		RegisterTamper(ESecureValueTamperReason::IntegrityMismatch);
+		Set(LastValidValue);
+		return LastValidValue;
+	}
+	const FVector Current = Components.Get();
+	const FRotator Result(Current.X, Current.Y, Current.Z);
+	if (ComputeAggregateIntegrity(Result) != AggregateIntegrity)
+	{
+		RegisterTamper(ESecureValueTamperReason::IntegrityMismatch);
+		Set(LastValidValue);
+		return LastValidValue;
+	}
+	return Result;
+}
+
+bool FSecureRotator::Validate()
+{
+	if (!bInitialized || !Components.Validate())
+	{
+		RegisterTamper(bInitialized ? ESecureValueTamperReason::IntegrityMismatch : ESecureValueTamperReason::NotInitialized);
+		return false;
+	}
+	const FVector Current = Components.Get();
+	return ComputeAggregateIntegrity(FRotator(Current.X, Current.Y, Current.Z)) == AggregateIntegrity;
+}
+
+void FSecureRotator::Rekey() { if (bInitialized) { Components.Rekey(); AggregateIntegrity = ComputeAggregateIntegrity(LastValidValue); } }
+void FSecureRotator::UpdateProtection(float DeltaSeconds) { if (bInitialized) { Components.UpdateProtection(DeltaSeconds); AggregateIntegrity = ComputeAggregateIntegrity(LastValidValue); } }
+void FSecureRotator::ResetToDefault() { Set(FRotator(Rules.DefaultValue.X, Rules.DefaultValue.Y, Rules.DefaultValue.Z)); }
+void FSecureRotator::CorruptForTesting() { Components.CorruptForTesting(); }
+uint32 FSecureRotator::GetTamperCount() const { return TamperCount + Components.GetTamperCount(); }
+void FSecureRotator::RegisterTamper(ESecureValueTamperReason Reason) { ++TamperCount; LastTamperReason = Reason; }
+uint32 FSecureRotator::ComputeAggregateIntegrity(const FRotator& Value) const
+{
+	uint32 Hash = ShieldUEHashValue(&Value.Pitch, sizeof(Value.Pitch));
+	Hash = ShieldUEHashValue(&Value.Yaw, sizeof(Value.Yaw), Hash);
+	return ShieldUEHashValue(&Value.Roll, sizeof(Value.Roll), Hash);
+}
+
+FSecureTransform::FSecureTransform() = default;
+
+bool FSecureTransform::ValidateRules(FString& OutError) const
+{
+	FSecureDouble TestValue;
+	TestValue.SetRules(Rules.ComponentRules);
+	if (!TestValue.ValidateRules(OutError)) return false;
+	return true;
+}
+
+void FSecureTransform::SetRules(const FSecureTransformRules& InRules) { Rules = InRules; }
+
+void FSecureTransform::Initialize(const FTransform& InitialValue, const FSecureTransformRules& InRules)
+{
+	Rules = InRules;
+	FSecureVectorRules VectorRules;
+	VectorRules.ComponentRules = InRules.ComponentRules;
+	Location.Initialize(InitialValue.GetLocation(), VectorRules);
+	Rotation.Initialize(InitialValue.Rotator(), VectorRules);
+	Scale3D.Initialize(InitialValue.GetScale3D(), VectorRules);
+	LastValidValue = InitialValue;
+	bInitialized = true;
+	LastTamperReason = ESecureValueTamperReason::None;
+	AggregateIntegrity = ComputeAggregateIntegrity(InitialValue);
+}
+
+void FSecureTransform::Set(const FTransform& NewValue)
+{
+	if (!bInitialized) Initialize(NewValue, Rules);
+	else
+	{
+		Location.Set(NewValue.GetLocation());
+		Rotation.Set(NewValue.Rotator());
+		Scale3D.Set(NewValue.GetScale3D());
+		LastValidValue = NewValue;
+		LastTamperReason = ESecureValueTamperReason::None;
+		AggregateIntegrity = ComputeAggregateIntegrity(NewValue);
+	}
+}
+
+FTransform FSecureTransform::Get()
+{
+	if (!bInitialized)
+	{
+		RegisterTamper(ESecureValueTamperReason::NotInitialized);
+		return Rules.DefaultValue;
+	}
+	if (!Location.Validate() || !Rotation.Validate() || !Scale3D.Validate())
+	{
+		RegisterTamper(ESecureValueTamperReason::IntegrityMismatch);
+		Set(LastValidValue);
+		return LastValidValue;
+	}
+	const FTransform Current(Rotation.Get().Quaternion(), Location.Get(), Scale3D.Get());
+	if (ComputeAggregateIntegrity(Current) != AggregateIntegrity)
+	{
+		RegisterTamper(ESecureValueTamperReason::IntegrityMismatch);
+		Set(LastValidValue);
+		return LastValidValue;
+	}
+	return Current;
+}
+
+bool FSecureTransform::Validate()
+{
+	if (!bInitialized || !Location.Validate() || !Rotation.Validate() || !Scale3D.Validate())
+	{
+		RegisterTamper(bInitialized ? ESecureValueTamperReason::IntegrityMismatch : ESecureValueTamperReason::NotInitialized);
+		return false;
+	}
+	return ComputeAggregateIntegrity(FTransform(Rotation.Get().Quaternion(), Location.Get(), Scale3D.Get())) == AggregateIntegrity;
+}
+
+void FSecureTransform::Rekey() { if (bInitialized) { Location.Rekey(); Rotation.Rekey(); Scale3D.Rekey(); AggregateIntegrity = ComputeAggregateIntegrity(LastValidValue); } }
+void FSecureTransform::UpdateProtection(float DeltaSeconds) { if (bInitialized) { Location.UpdateProtection(DeltaSeconds); Rotation.UpdateProtection(DeltaSeconds); Scale3D.UpdateProtection(DeltaSeconds); AggregateIntegrity = ComputeAggregateIntegrity(LastValidValue); } }
+void FSecureTransform::ResetToDefault() { Set(Rules.DefaultValue); }
+void FSecureTransform::CorruptForTesting() { Location.CorruptForTesting(); }
+uint32 FSecureTransform::GetTamperCount() const { return TamperCount + Location.GetTamperCount() + Rotation.GetTamperCount() + Scale3D.GetTamperCount(); }
+void FSecureTransform::RegisterTamper(ESecureValueTamperReason Reason) { ++TamperCount; LastTamperReason = Reason; }
+uint32 FSecureTransform::ComputeAggregateIntegrity(const FTransform& Value) const
+{
+	const FVector LocationValue = Value.GetLocation();
+	const FQuat RotationValue = Value.GetRotation();
+	const FVector ScaleValue = Value.GetScale3D();
+	uint32 Hash = ShieldUEHashValue(&LocationValue, sizeof(LocationValue));
+	Hash = ShieldUEHashValue(&RotationValue, sizeof(RotationValue), Hash);
+	return ShieldUEHashValue(&ScaleValue, sizeof(ScaleValue), Hash);
 }

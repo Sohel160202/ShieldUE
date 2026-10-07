@@ -13,6 +13,7 @@ ShieldUE supports both C++ and Blueprint workflows.
 
 - Protected Float, Int32, and Bool values
 - Protected Int64, Double, and Byte values
+- Protected Vector, Rotator, and Transform values with aggregate validation
 - Encoded runtime storage
 - Shadow-value verification
 - Integrity validation
