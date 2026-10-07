@@ -14,6 +14,7 @@ ShieldUE supports both C++ and Blueprint workflows.
 - Protected Float, Int32, and Bool values
 - Protected Int64, Double, and Byte values
 - Protected Vector, Rotator, and Transform values with aggregate validation
+- Server-aware multiplayer validation helpers and anti-tamper events
 - Encoded runtime storage
 - Shadow-value verification
 - Integrity validation
@@ -121,6 +122,7 @@ Do not use testing corruption functions in shipping gameplay code.
 - [Rule validation](Docs/Rule-Validation.md)
 - [Serialization and multiplayer](Docs/Serialization-and-Multiplayer.md)
 - [Threat model](Docs/Threat-Model.md)
+- [Multiplayer integrity](Docs/Multiplayer.md)
 - [Security policy](SECURITY.md)
 - [Contributing](CONTRIBUTING.md)
 - [Support](SUPPORT.md)

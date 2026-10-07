@@ -10,6 +10,7 @@ All notable ShieldUE changes are documented here.
 - C++ and Blueprint APIs for the new numeric types.
 - `FSecureVector`, `FSecureRotator`, and `FSecureTransform` structured value types.
 - Aggregate integrity checks across structured value components.
+- Initial server-aware multiplayer integrity layer with subsystem, component, violation events, and suspicion scoring.
 - Blueprint accessors for initialization state and last valid values.
 - Blueprint testing nodes for controlled corruption tests.
 - Blueprint rule-validation nodes with human-readable errors.
