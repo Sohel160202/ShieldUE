@@ -1,5 +1,10 @@
 # ShieldUE
 
+[![Repository validation](https://github.com/Sohel160202/ShieldUE/actions/workflows/validate-repository.yml/badge.svg)](https://github.com/Sohel160202/ShieldUE/actions/workflows/validate-repository.yml)
+[![License](https://img.shields.io/github/license/Sohel160202/ShieldUE)](LICENSE)
+[![Latest commit](https://img.shields.io/github/last-commit/Sohel160202/ShieldUE)](https://github.com/Sohel160202/ShieldUE/commits/main)
+[![Unreal Engine](https://img.shields.io/badge/Unreal%20Engine-5.7-0E1128?logo=unrealengine)](https://www.unrealengine.com/)
+
 ShieldUE is a runtime gameplay-integrity plugin for Unreal Engine. It helps developers detect and recover from naïve memory edits to gameplay-critical values such as health, currency, score, ammunition, and progression.
 
 ShieldUE supports both C++ and Blueprint workflows.
@@ -32,6 +37,15 @@ For competitive multiplayer games, the server must remain authoritative for curr
 4. Rebuild the project if you are using C++.
 
 ShieldUE currently targets Unreal Engine 5.7. Compatibility with other engine versions may require source adjustments.
+
+## Compatibility
+
+| ShieldUE version | Unreal Engine | Status |
+| --- | --- | --- |
+| Main branch | 5.7 | Declared target; project testing required |
+| Main branch | Other versions | Not officially verified |
+
+The repository workflow validates the plugin descriptor and repository structure. It does not replace compilation inside the target Unreal Engine version.
 
 ## C++ example
 
@@ -73,6 +87,14 @@ For a protected value:
 6. Use `Is Initialized`, `Get Last Valid Value`, and `Reset To Default` when your game needs recovery or diagnostics.
 7. Use the testing nodes only in development and automated tests.
 
+## Examples
+
+Small copy-ready examples are available in [`Examples/`](Examples/):
+
+- [Protected currency](Examples/ProtectedCurrency.cpp)
+- [Blueprint workflow](Examples/BlueprintWorkflow.md)
+- [Rule validation](Examples/RuleValidation.cpp)
+
 ## Recovery modes
 
 | Mode | Behavior |
@@ -96,8 +118,11 @@ Do not use testing corruption functions in shipping gameplay code.
 - [Architecture](Docs/Architecture.md)
 - [Rule validation](Docs/Rule-Validation.md)
 - [Serialization and multiplayer](Docs/Serialization-and-Multiplayer.md)
+- [Threat model](Docs/Threat-Model.md)
 - [Security policy](SECURITY.md)
 - [Contributing](CONTRIBUTING.md)
+- [Support](SUPPORT.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
 
 ## Roadmap
 

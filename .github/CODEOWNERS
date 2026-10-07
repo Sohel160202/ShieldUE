@@ -1,0 +1,6 @@
+# Default reviewer for ShieldUE changes.
+* @Sohel160202
+
+# Security-sensitive changes should be reviewed by the project owner.
+/Source/ShieldUE/ @Sohel160202
+/SECURITY.md @Sohel160202
